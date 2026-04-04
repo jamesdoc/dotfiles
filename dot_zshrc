@@ -1,0 +1,41 @@
+# ============================================================
+# .zshrc
+# ============================================================
+
+# -- Helpers -------------------------------------------------
+_ensure_brew_pkg() {
+  command -v "$1" &>/dev/null || brew install "$2"
+}
+
+# -- Starship prompt -----------------------------------------
+_ensure_brew_pkg starship starship
+eval "$(starship init zsh)"
+
+# -- rbenv ---------------------------------------------------
+_ensure_brew_pkg rbenv rbenv
+export PATH="$HOME/.rbenv/shims:$PATH"
+eval "$(rbenv init - zsh)"
+
+# -- fnm -----------------------------------------------------
+_ensure_brew_pkg fnm fnm
+eval "$(fnm env --use-on-cd --log-level quiet --shell zsh)"
+nvm() { echo "👋 We use fnm instead"; }
+
+# -- pnpm ----------------------------------------------------
+_ensure_brew_pkg pnpm pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+# -- History -------------------------------------------------
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE="$HOME/.zsh_history"
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+
+# -- Completion ----------------------------------------------
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
