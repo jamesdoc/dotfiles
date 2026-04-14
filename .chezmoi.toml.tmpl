@@ -1,0 +1,5 @@
+[data]
+    email = {{ promptString "What is your email" | quote }}
+    hostname = {{ promptString "What is the hostname" | lower | quote }}
+    deviceType = {{ promptChoice "Select device type" (list "work" "personal") | quote }}
+    setSsh = {{ promptBool "Do you want an SSH key generated?" }}

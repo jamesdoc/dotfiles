@@ -1,0 +1,77 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+set -eufo pipefail
+
+echo "🍺 Installing Homebrew packages…"
+
+# --------------------------------------------------------------------
+# Sudo keep-alive while installing packages
+# --------------------------------------------------------------------
+echo "🔒 Elevating privileges…"
+sudo -v
+
+keep_sudo_alive() {
+  while true; do
+    sudo -n true
+    sleep 60
+  done
+}
+
+keep_sudo_alive &
+SUDO_KEEP_ALIVE_PID=$!
+
+cleanup() {
+  kill "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true
+}
+
+trap cleanup EXIT INT TERM
+
+# --------------------------------------------------------------------
+# Brew bundle
+# --------------------------------------------------------------------
+
+brew bundle --file=/dev/stdin <<EOF
+brew "starship"
+brew "git"
+brew "eza"
+brew "fnm"
+brew "pnpm"
+brew "pyenv"
+brew "ruby-build"
+brew "rbenv"
+cask "1password"
+cask "alt-tab"
+cask "beekeeper-studio"
+cask "figma"
+cask "font-maple-mono"
+cask "font-maple-mono-nf"
+cask "google-chrome"
+cask "imageoptim"
+cask "ghostty"
+cask "localsend"
+cask "postman"
+cask "raycast"
+cask "spotify"
+cask "zoom"
+cask "theboredteam/boring-notch/boring-notch"
+
+{{- if eq .deviceType "personal" }}
+brew "tor"
+brew "yt-dlp"
+cask "beeper"
+cask "calibre"
+cask "dropbox"
+cask "microsoft-outlook"
+cask "microsoft-teams"
+cask "microsoft-excel"
+cask "microsoft-word"
+cask "onedrive"
+cask "visual-studio-code"
+{{- end }}
+
+{{- if eq .deviceType "work" }}
+cask "cursor"
+{{- end }}
+EOF
+
+{{- end }}

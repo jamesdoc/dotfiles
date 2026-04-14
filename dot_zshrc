@@ -39,3 +39,22 @@ setopt HIST_IGNORE_DUPS
 # -- Completion ----------------------------------------------
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# -- Exports -------------------------------------------------
+export EDITOR=vim
+
+# -- Aliases -------------------------------------------------
+source ~/.dotfiles/.aliases
+
+# -- Load in .local if it exists -----------------------------
+if [ -f "$HOME/.zshrc.local" ]; then
+  source "$HOME/.zshrc.local"
+fi
+
+# -- Banner --------------------------------------------------
+echo "------------------------------------------------------------"
+print -P "%F{cyan}  Date: $(date +'%A, %D %T')%f"
+print -P "%F{blue}%B  Host: $(hostname) | User: $(whoami)%b%f"
+print -P "%F{yellow}  Up:   $(uptime | sed 's/.*up \([^,]*\), .*/\1/')%f"
+echo "  Disk: $(df -h / | awk 'NR==2 {print $5 " of " $2 " used"}')"
+echo "------------------------------------------------------------"

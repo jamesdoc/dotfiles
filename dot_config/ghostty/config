@@ -1,0 +1,31 @@
+# Macos
+macos-icon = xray
+
+# Fonts
+font-family = "Maple Mono NF"
+font-feature = 'calt'
+font-size = 12
+
+# Let it breath
+adjust-cell-height = 15%
+
+# Colors
+theme = Neutron
+cursor-color = #ff6b6b
+split-divider-color = #7B9AB5
+
+# Cursor
+cursor-style = block
+
+# Window
+window-padding-x = 6
+window-padding-y = 6
+
+# Clipboard
+clipboard-read = allow
+clipboard-write = allow
+
+# Quick-terminal
+quick-terminal-screen = mouse
+keybind = global:opt+space=toggle_quick_terminal
+

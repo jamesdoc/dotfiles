@@ -1,0 +1,20 @@
+#!/bin/bash
+set -eufo pipefail
+
+{{- if and (eq .chezmoi.os "darwin") .setSsh }}
+
+sshKeyPath="{{ .chezmoi.homeDir }}/.ssh/{{ .hostname }}"
+
+if [ ! -f "$sshKeyPath" ]; then
+  echo "🔑  Setting up SSH key"
+  ssh-keygen -t ed25519 -C "{{ .email }}" -f "$sshKeyPath"
+  eval "$(ssh-agent -s)"
+  ssh-add --apple-use-keychain "$sshKeyPath"
+  pbcopy < "$sshKeyPath".pub
+  echo "✅  Copied key contents to clipboard to copy into Github"
+  open https://github.com/settings/ssh/new
+else
+  echo "ℹ️  SSH key {{ .hostname }} already exists, skipping creation"
+fi
+
+{{ end -}}

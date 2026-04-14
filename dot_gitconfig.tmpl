@@ -1,0 +1,109 @@
+[user]
+  name = James Doc
+  email = {{ .email }}
+
+[core]
+  excludesfile = ~/.gitignore_global
+  editor = /usr/bin/vim
+  ignorecase = true
+  autocrlf = input
+
+[color]
+  ui = true
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = red
+
+[init]
+  defaultBranch = main
+
+[fetch]
+  prune = true
+
+[push]
+  default = simple
+  autoSetupRemote = true
+
+[pull]
+  rebase = false
+
+[alias]
+  # Shorthands
+  co = checkout
+  p = push
+  b = branch -av
+  rb = rebase -i
+  st = status -s
+  sw = switch
+
+  # Outputs a list of the changed files, then asks for confirmation to amend the changes into the previous commit (without editing the commit message) - dangerous!
+  amend = "!f() { s=$(git status -s); [ -z \"$s\" ] && echo 'No changes.' && return; echo \"$s\"; printf 'Are you sure? [y/N] '; read ans; [ \"$ans\" = y ] || [ \"$ans\" = Y ] && git commit -a --amend --no-edit; }; f"
+
+  # Create a WIP commit of everything, accepts optional message
+  wip = "!f() { git add --all && git commit -m \"[wip]${1:+ }$1\"; }; f"
+
+  # Does what it says - deletes the branch that have been merged into staging
+  delete-merged-branches = !sh -c 'git branch --merged staging | grep -v staging | xargs -n 1 git branch -d'
+
+  # What's the last commit?
+  last = log -1 HEAD
+
+  # Show the last [x] commits (defaults to 5)
+  lg = "!f() { git log -n \"${1:-5}\" --pretty=format:\"%C(red)%h %C(yellow)%cd %Creset%<(45,trunc)%s%Cblue [%cn]\" --decorate --date=format:'%Y-%m-%d %H:%M'; }; f"
+
+  # Quick switch to different branches
+  master = !sh -c 'git switch master'
+  main = !sh -c 'git switch main'
+  staging = !sh -c 'git switch staging && git pull && git delete-merged-branches && git status -s'
+
+  # Interactive switch to different branches
+  isw = !sh -c 'git switch $(git branch | fzf | xargs)'
+
+  # Interactive delete branch
+  idel = !sh -c 'git branch -D $(git branch | fzf | xargs)'
+
+  # Better diff
+  df = diff --color --color-words --abbrev
+
+  # Reset back to the last commit
+  reset = reset --hard HEAD
+
+  # Show all branches nicely with their last commits
+  b = branch -av
+
+  # Unstage changes from the index
+  unstage = reset HEAD --
+
+  # Show the diff between the latest commit and the current state
+  d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+
+  # via Remy Sharp - which branches are we working on
+  recent = !git for-each-ref --sort=committerdate --format='%(committerdate:relative) %(refname:short)' refs/heads/ | tail -10
+
+  # List contributors ranked by commit count.
+  builders = shortlog -sn --no-merges
+
+  # Commit count by month for the history of the repo
+  history = log --format='%ad' --date=format:'%Y-%m' | sort | uniq -c
+
+[includeIf "gitdir:~/Developer/**"]
+  path = .gitconfig_development
+
+[includeIf "gitdir:~/Developer/globe/**"]
+  path = .gitconfig_globe
+
+[includeIf "gitdir:~/Developer/beacon/**"]
+  path = .gitconfig_beacon
