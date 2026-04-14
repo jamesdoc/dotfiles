@@ -40,6 +40,20 @@ setopt HIST_IGNORE_DUPS
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
+# Highlight the current selection in the menu
+zstyle ':completion:*' menu select
+
+# Show descriptions/groups for completions
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+
+# Partial-word matching (e.g. `d/s/b` matches `dir/sub/bar`)
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+# Cache completions (useful for slow ones like apt/brew)
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
 # -- Exports -------------------------------------------------
 export EDITOR=vim
 

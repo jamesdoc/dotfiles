@@ -1,7 +1,8 @@
 # alias
 
 # map ls to eza with a flag or two
-alias ls='eza -la --header --icons --git --no-user --no-permissions --git-repos --group-directories-first --time-style "+%Y-%m-%d %H:%M"'
+alias ls='eza --color=auto --icons --group-directories-first --across --no-quotes'
+alias ll='eza -la --icons --group-directories-first --git --git-repos --header --no-permissions --no-user --time-style="+%Y-%m-%d %H:%M:%S"'
 
 # pnpm is hard to type…
 alias pn='pnpm'
