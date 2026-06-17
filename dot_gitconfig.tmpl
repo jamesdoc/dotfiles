@@ -64,6 +64,9 @@
   # Show the last [x] commits (defaults to 5)
   lg = "!f() { git log -n \"${1:-5}\" --pretty=format:\"%C(red)%h %C(yellow)%cd %Creset%<(45,trunc)%s%Cblue [%cn]\" --decorate --date=format:'%Y-%m-%d %H:%M'; }; f"
 
+  # Trash all changes (git reset --hard HEAD and then remove all untracked files)
+  trash = "!f() { s=$(git status -s); [ -z \"$s\" ] && echo 'No changes to trash.' && return; echo \"$s\" | while read -r status file; do if [ \"$status\" = \"??\" ]; then printf '\\033[31m[Untracked] \\033[0m%s\\n' \"$file\"; else printf '\\033[33m[Modified]  \\033[0m%s\\n' \"$file\"; fi; done; printf '\\n\\033[1;31mAre you sure you want to TRASH all changes? [y/N]\\033[0m '; read ans; [ \"$ans\" = y ] || [ \"$ans\" = Y ] && git reset --hard HEAD && git clean -df; }; f"
+
   # Quick switch to different branches
   master = !sh -c 'git switch master'
   main = !sh -c 'git switch main'
